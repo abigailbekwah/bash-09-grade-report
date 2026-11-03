@@ -12,7 +12,7 @@ if [ ! -f "$CSV_FILE" ] || [ ! -r "$CSV_FILE" ]; then
 fi
 
 # Skip header and read each line
-tail -n +2 "$CSV_FILE" | tr -d '\r' while IFS=, read -r name html css bash git; do
+tail -n +2 "$CSV_FILE" | tr -d '\r' | while IFS=, read -r name html css bash git; do
   ((line_num++))
   # Trim messy whitespaces completely
   name=$(echo "$name" | xargs 2>/dev/null)
@@ -20,28 +20,25 @@ tail -n +2 "$CSV_FILE" | tr -d '\r' while IFS=, read -r name html css bash git; 
   css=$(echo "$css" | xargs 2>/dev/null)
   bash=$(echo "$bash" | xargs 2>/dev/null)
   git=$(echo "$git" | xargs 2>/dev/null)
-fi 
-
+ 
+done 
 # 1. Check for missing name or any missing scores
 if [[ -z "$name" || -z "$html" || -z "$css" || -z "$bash" || -z "$git" ]]; then
-      echo "Warning: Line $line_num skipped (missing name or score)." >&2
-      echo "skipped" >> "$tmp_data"
-      continue
+    echo "Warning: Line $line_num skipped (missing name or score)." >&2
+
 fi
 
   # 2. Check if scores are integers (not a number)
 if [[ ! "$html" =~ ^[0-9]+$ || ! "$css" =~ ^[0-9]+$ || \
         ! "$bash" =~ ^[0-9]+$ || ! "$git" =~ ^[0-9]+$ ]]; then
       echo "Warning: Line $line_num skipped (score is not a whole number)." >&2
-      echo "skipped" >> "$tmp_data"
-      continue
+    
 fi
 
   # 3. Check if any score is over 20
 if (( html > 20 || css > 20 || bash > 20 || git > 20 )); then
       echo "Warning: Line $line_num skipped (score over 20 detected)." >&2
-      echo "skipped" >> "$tmp_data"
-      continue
+    
 fi
     sum=$((html + css +bash + git))
     avg=$(awk "BEGIN {prinf \"%.2f\", $sum/4}")
