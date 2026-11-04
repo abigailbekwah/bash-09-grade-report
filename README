@@ -1,0 +1,75 @@
+# bash-09-grade-report
+
+Bash-09-grade-report built to help rebase instructor to calculate average and rank student
+
+## Problem_Statement​
+
+At the end of every month, Rebase instructors receive a spreadsheet of scores and spend an evening calculating averages and rankings by hand. Build grades.sh so it takes two seconds.
+
+## 📌 Project Goals
+
+Automated Ingestion & Validation
+
+Real-World Data Sanitization
+
+Dynamic Analytics & Ranking
+
+Executive Presentation
+
+## Tech stack
+
+- Bash
+- ShellCheck
+- Git & Github
+
+## screenshot
+
+![bash script] ![alt text](<asset/images/Screenshot From 2026-11-03 16-30-55.png>)
+
+## Features
+
+- Strict Input Validation
+
+- Data Sanitization
+
+- Robust Error Handling
+
+- Automatic Rankingidual
+
+- Aligned Formatting
+
+## installation and setup
+
+clone the repository
+
+```bash
+git clone https://github.com/abigailbekwah/bash-09-grade-report.git
+- chmod +x grade.sh
+- grade.csv
+- ./grade.sh grade.csv
+```
+
+## Challenges faces
+
+Heading linter errors
+Shell Syntax & Control Flow Clashes
+Git Branching & Remote Synchronization
+
+## 📚 what i learnt
+
+Technical documentation
+How to understand the question better
+Get to test my code on terminal
+Robust Bash Scripting & Error Handling
+Correcting some few syntex errors
+
+## Author​
+
+Bekwah Abigail Becky
+
+Junior bash developer
+
+👨🏽‍💻 Email: <abigailbekwah@gmail.com>​
+
+🌍 Based in Cameroon | Open to remote opportunities
+Was able to understand the question at a point
