@@ -6,14 +6,40 @@ fi
 
 CSV_FILE=$1
 
+
 if [ ! -f "$CSV_FILE" ] || [ ! -r "$CSV_FILE" ]; then
     echo "Error: File '$CSV_FILE' is missing or unreadable." >&2
     exit 1
 fi
 
 # Skip header and read each line
-tail -n +2 "$CSV_FILE" | tr -d '\r' | while IFS=, read -r name html css bash git; do
-  ((line_num++))
+line_num=1
+tmp_data=$(mktemp)
+trap 'rm -f "$tmp_data"' EXIT
+
+while IFS=, read -r name html css bash git; do 
+(( line_num++))
+# Check for missing values (now completely safe from subshell loss)
+if [[ -z "$name" || -z "$html" || -z "$css" || -z "$bash" || -z "$git" ]]; then
+    echo "Warning: Line $line_num has missing data. Skipping." >&2
+    continue
+fi
+
+if [[ ! "$html" =~ ^[0-9]+$ || ! "$css" =~ ^[0-9]+$ || ! "$bash" =~ ^[0-9]+$ || ! "$git" =~ ^[0-9]+$ ]]; then
+        echo "Warning: Line $line_num skipped (non-numeric score detected)." >&2
+        continue
+fi
+
+if (( html > 20 || css > 20 || bash > 20 || git > 20 )); then
+        echo "Warning: Line $line_num skipped (score exceeds maximum limit)." >&2
+        continue
+fi
+
+ sum=$((html + css + bash + git))
+
+ echo "$sum|$name|$html|$css|$bash|$git" >> "$tmp_data"
+done < <(tail -n +2 "$CSV_FILE" | tr -d '\r')
+
   # Trim messy whitespaces completely
   name=$(echo "$name" | xargs 2>/dev/null)
   html=$(echo "$html" | xargs 2>/dev/null)
@@ -22,38 +48,24 @@ tail -n +2 "$CSV_FILE" | tr -d '\r' | while IFS=, read -r name html css bash git
   git=$(echo "$git" | xargs 2>/dev/null)
  
 done 
-# 1. Check for missing name or any missing scores
-if [[ -z "$name" || -z "$html" || -z "$css" || -z "$bash" || -z "$git" ]]; then
-    echo "Warning: Line $line_num skipped (missing name or score)." >&2
 
-fi
-
-  # 2. Check if scores are integers (not a number)
-if [[ ! "$html" =~ ^[0-9]+$ || ! "$css" =~ ^[0-9]+$ || \
-        ! "$bash" =~ ^[0-9]+$ || ! "$git" =~ ^[0-9]+$ ]]; then
-      echo "Warning: Line $line_num skipped (score is not a whole number)." >&2
-    
-fi
-
-  # 3. Check if any score is over 20
-if (( html > 20 || css > 20 || bash > 20 || git > 20 )); then
-      echo "Warning: Line $line_num skipped (score over 20 detected)." >&2
-    
-fi
     sum=$((html + css +bash + git))
     avg=$(awk "BEGIN {prinf \"%.2f\", $sum/4}")
     echo "$avg,$name"
 
- if (( total >= 64 )); then mention="Très bien"
-  elif (( total >= 56 )); then mention="Bien"
-  elif (( total >= 48 )); then mention="Assez bien"
-  elif (( total >= 40 )); then mention="Passable"
-  else mention="Échec"
-  fi
+# Calculate the total score first
+total=$(( html + css + bash + git ))
 
-line_no=1
-while IFS=, read -r name html css bash git; do
- (( line_no++ ))
+if (( total >= 64 )); then 
+    mention="Très bien"
+  elif (( total >= 56 )); then 
+    mention="Bien"
+  elif (( total >= 48 )); then 
+    mention="Assez bien"
+  elif (( total >= 40 )); then 
+    mention="Passable"
+  else mention="Échech"
+fi
 
  
 if [[ -z "$name" ]]; then
@@ -81,7 +93,7 @@ skipped_lines=$(grep -c "skipped" "$tmp_data" 2>/dev/null || echo 0)
 
 # Aligned Blueprint Layout
 FMT="  %-5s %-17s %-5s %-5s %-5s %-5s %-6s %-s\n"
-printf "$FMT" "RANK" "NAME" "HTML" "CSS" "BASH" "GIT" "AVG" "MENTION"
+printf "%-4s %-12s %-6s %-6s %-6s %-6s %-6s %-10s\n" "RANK" "NAME" "HTML" "CSS" "BASH" "GIT" "AVG" "MENTION"
 
 rank=1
 class_sum=0
@@ -89,14 +101,14 @@ valid_student_count=0
 
 # Process valid records sorted from highest average downwards
 while IFS='|' read -r avg name html css bash git mention; do
-  if [ -n "$avg" ]; then
+if [ -n "$avg" ]; then
       printf "  %-5d %-17s %-5s %-5s %-5s %-5s %-6s %-s\n" \
              "$rank" "$name" "$html" "$css" "$bash" "$git" "$avg" "$mention"
              
       class_sum=$(awk -v cs="$class_sum" -v a="$avg" 'BEGIN {print cs + a}')
       ((rank++))
       ((valid_student_count++))
-  fi
+fi
 done < <(grep -v "skipped" "$tmp_data" | sort -rn -t'|' -k1 2>/dev/null)
 
 # Summary computations
