@@ -74,7 +74,7 @@ fi
 
 for score in "$html" "$css" "$bash" "$git"; do
 if ! [[ "$score" =~ ^[0-9]+$ ]]  || (( score > 20 )); then
-    echo "Line $line_no: invalid score '$score' for $name, skipped" >&2
+    echo "Line $line_num: invalid score '$score' for $name, skipped" >&2
 continue 2
 
 fi
