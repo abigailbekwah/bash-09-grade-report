@@ -47,7 +47,6 @@ done < <(tail -n +2 "$CSV_FILE" | tr -d '\r')
   bash=$(echo "$bash" | xargs 2>/dev/null)
   git=$(echo "$git" | xargs 2>/dev/null)
  
-done 
 
     sum=$((html + css +bash + git))
     avg=$(awk "BEGIN {prinf \"%.2f\", $sum/4}")
@@ -84,7 +83,6 @@ printf "%-6s %-15s %-10s %-15s\n" "Rank" "Name" "Average" "mention"
 
   # Output cleanly structured records to our storage file
   echo "$avg|$name|$html|$css|$bash|$git|$mention" >> "$tmp_data"
-done
 
 # =====================================================================
 # 3. SORTING AND FINAL ALIGNED PRINT
@@ -102,12 +100,11 @@ valid_student_count=0
 # Process valid records sorted from highest average downwards
 while IFS='|' read -r avg name html css bash git mention; do
 if [ -n "$avg" ]; then
-      printf "  %-5d %-17s %-5s %-5s %-5s %-5s %-6s %-s\n" \
-             "$rank" "$name" "$html" "$css" "$bash" "$git" "$avg" "$mention"
+    printf "  %-5d %-17s %-5s %-5s %-5s %-5s %-6s %-s\n" \ "$rank" "$name" "$html" "$css" "$bash" "$git" "$avg" "$mention"
              
-      class_sum=$(awk -v cs="$class_sum" -v a="$avg" 'BEGIN {print cs + a}')
-      ((rank++))
-      ((valid_student_count++))
+    class_sum=$(awk -v cs="$class_sum" -v a="$avg" 'BEGIN {print cs + a}')
+    ((rank++))
+    ((valid_student_count++))
 fi
 done < <(grep -v "skipped" "$tmp_data" | sort -rn -t'|' -k1 2>/dev/null)
 
