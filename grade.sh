@@ -68,8 +68,8 @@ fi
 
  
 if [[ -z "$name" ]]; then
-    echo "Line $line_no: missing name, skipped" >&2
- continue
+    echo "Line $line_num: missing name, skipped" >&2
+ 
 fi
 
 for score in "$html" "$css" "$bash" "$git"; do
@@ -90,7 +90,6 @@ printf "%-6s %-15s %-10s %-15s\n" "Rank" "Name" "Average" "mention"
 skipped_lines=$(grep -c "skipped" "$tmp_data" 2>/dev/null || echo 0)
 
 # Aligned Blueprint Layout
-FMT="  %-5s %-17s %-5s %-5s %-5s %-5s %-6s %-s\n"
 printf "%-4s %-12s %-6s %-6s %-6s %-6s %-6s %-10s\n" "RANK" "NAME" "HTML" "CSS" "BASH" "GIT" "AVG" "MENTION"
 
 rank=1
