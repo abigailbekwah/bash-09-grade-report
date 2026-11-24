@@ -16,6 +16,7 @@ fi
 line_num=1
 tmp_data=$(mktemp)
 trap 'rm -f "$tmp_data"' EXIT
+skipped_lines=0
 
 while IFS=, read -r name html css bash git; do 
 (( line_num++))
@@ -23,12 +24,14 @@ while IFS=, read -r name html css bash git; do
 # Check for missing values (now completely safe from subshell loss)
 if [[ -z "$name" || -z "$html" || -z "$css" || -z "$bash" || -z "$git" ]]; then
     echo "Warning: Line $line_num has missing data. Skipping." >&2
+    ((skipped_lines++))
     continue
 fi
 
 # check maximum score
 if [[ ! "$html" =~ ^[0-9]+$ || ! "$css" =~ ^[0-9]+$ || ! "$bash" =~ ^[0-9]+$ || ! "$git" =~ ^[0-9]+$ ]]; then
         echo "Warning: Line $line_num has a score above 20. Skipping." >&2
+        ((skipped_lines++))
         continue
 fi
 
@@ -95,7 +98,7 @@ echo "$avg|$name|$html|$css|$bash|$git|$mention" >> "$tmp_data"
 # =====================================================================
 # 3. SORTING AND FINAL ALIGNED PRINT
 # =====================================================================
-skipped_lines=$(grep -c "skipped" "$tmp_data" 2>/dev/null || echo 0)
+# skipped_lines=$(grep -c "skipped" "$tmp_data" 2>/dev/null || echo 0)
 
 # Aligned Blueprint Layout
 printf "%-6s %-15s %-6s %-6s %-6s %-6s %-8s %-15s\n" \
@@ -115,7 +118,7 @@ if [ -n "$avg" ]; then
     ((rank++))
     ((valid_student_count++))
 fi
-done < <(grep -v "skipped" "$tmp_data" | sort -rn -t'|' -k1 2>/dev/null)
+done < <(sort -rn -t'|' -k1 "$tmp_data")
 
 # Summary computations
 if [ "$valid_student_count" -gt 0 ]; then
