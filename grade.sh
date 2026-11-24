@@ -37,15 +37,17 @@ fi
 
 # check maximum score
 if [[ ! "$html" =~ ^[0-9]+$ || ! "$css" =~ ^[0-9]+$ || ! "$bash" =~ ^[0-9]+$ || ! "$git" =~ ^[0-9]+$ ]]; then
-        echo "Warning: Line $line_num has a score above 20. Skipping." >&2
+        echo "Warning: Line $line_num contains a non-numeric score. Skipping." >&2
         ((skipped_lines++))
         continue
 fi
 
-# if (( html > 20 || css > 20 || bash > 20 || git > 20 )); then
-#         echo "Warning: Line $line_num skipped (score exceeds maximum limit)." >&2
-#         continue
-# fi
+# Check maximum score
+if (( html > 20 || css > 20 || bash > 20 || git > 20 )); then
+    echo "Warning: Line $line_num has a score above 20. Skipping." >&2
+    ((skipped_lines++))
+    continue
+fi
 
 # calculate total and average
  sum=$((html + css + bash + git))
