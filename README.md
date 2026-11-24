@@ -20,7 +20,7 @@ Executive Presentation
 
 - Bash
 - ShellCheck
-- Git & Github
+- Git & GitHub
 
 ## screenshot
 
