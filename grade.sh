@@ -88,7 +88,7 @@ echo "$avg|$name|$html|$css|$bash|$git|$mention" >> "$tmp_data"
  done < <(tail -n +2 "$CSV_FILE" | tr -d '\r')
 
 
-printf "%-6s %-15s %-10s %-15s\n" "Rank" "Name" "Average" "mention"
+# printf "%-6s %-15s %-10s %-15s\n" "Rank" "Name" "Average" "mention"
 
   # Output cleanly structured records to our storage file
 
@@ -98,7 +98,8 @@ printf "%-6s %-15s %-10s %-15s\n" "Rank" "Name" "Average" "mention"
 skipped_lines=$(grep -c "skipped" "$tmp_data" 2>/dev/null || echo 0)
 
 # Aligned Blueprint Layout
-printf "%-4s %-12s %-6s %-6s %-6s %-6s %-6s %-10s\n" "RANK" "NAME" "HTML" "CSS" "BASH" "GIT" "AVG" "MENTION"
+printf "%-6s %-15s %-6s %-6s %-6s %-6s %-8s %-15s\n" \
+ "RANK" "NAME" "HTML" "CSS" "BASH" "GIT" "AVG" "MENTION"
 
 rank=1
 class_sum=0
@@ -106,8 +107,9 @@ valid_student_count=0
 
 # Process valid records sorted from highest average downwards
 while IFS='|' read -r avg name html css bash git mention; do
-if [ -n "$avg" ]; then
-    printf "  %-5d %-17s %-5s %-5s %-5s %-5s %-6s %-s\n" \ "$rank" "$name" "$html" "$css" "$bash" "$git" "$avg" "$mention"
+if [ -n "$avg" ]; then 
+    printf "  %-6d %-15s %-6s %-6s %-6s %-6s %-8s %-15s\n" \
+     "$rank" "$name" "$html" "$css" "$bash" "$git" "$avg" "$mention"
              
     class_sum=$(awk -v cs="$class_sum" -v a="$avg" 'BEGIN {print cs + a}')
     ((rank++))
