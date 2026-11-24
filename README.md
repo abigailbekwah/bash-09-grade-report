@@ -1,6 +1,6 @@
 # bash-09-grade-report
 
-Bash-09-grade-report built to help rebase instructor to calculate average and rank student
+Bash-09-Grade-Report is a command-line tool built to help Rebase instructors automate student grade calculations, ranking, and reporting.This can only be done with grades.sh and grades.csv, which rank the first student,align columns using printf and fix student average and mention.
 
 ## Problem_Statement​
 
@@ -41,13 +41,24 @@ Executive Presentation
 ## installation and setup
 
 clone the repository
+git clone [https://github.com/abigailbekwah/bash-09-grade-report.git]
 
-```bash
-git clone https://github.com/abigailbekwah/bash-09-grade-report.git
-- chmod +x grade.sh
-- grade.csv
-- ./grade.sh grade.csv
-```
+Make the script executable:
+
+chmod +x grades.sh
+
+Run the script:
+
+./grades.sh grades.csv
+
+Testing
+
+Test the script with the following commands:
+
+./grades.sh
+./grades.sh grades.csv
+./grades.sh messy.csv
+./grades.sh messy_crlf.csv
 
 ## Challenges faces
 
@@ -72,4 +83,3 @@ Junior bash developer
 👨🏽‍💻 Email: <abigailbekwah@gmail.com>​
 
 🌍 Based in Cameroon | Open to remote opportunities
-Was able to understand the question at a point
