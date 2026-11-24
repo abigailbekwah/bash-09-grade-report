@@ -21,6 +21,13 @@ skipped_lines=0
 while IFS=, read -r name html css bash git; do 
 (( line_num++))
 
+# Trim whitespace around CSV values
+  name=$(echo "$name" | xargs 2>/dev/null)
+  html=$(echo "$html" | xargs 2>/dev/null)
+  css=$(echo "$css" | xargs 2>/dev/null)
+  bash=$(echo "$bash" | xargs 2>/dev/null)
+  git=$(echo "$git" | xargs 2>/dev/null)
+
 # Check for missing values (now completely safe from subshell loss)
 if [[ -z "$name" || -z "$html" || -z "$css" || -z "$bash" || -z "$git" ]]; then
     echo "Warning: Line $line_num has missing data. Skipping." >&2
@@ -45,15 +52,7 @@ fi
  avg=$(awk -v total="$sum" 'BEGIN {printf "%.2f", total/4}')
 #  echo "$sum|$name|$html|$css|$bash|$git" >> "$tmp_data"
 # done < <(tail -n +2 "$CSV_FILE" | tr -d '\r')
-
-#   # Trim messy whitespaces completely
-#   name=$(echo "$name" | xargs 2>/dev/null)
-#   html=$(echo "$html" | xargs 2>/dev/null)
-#   css=$(echo "$css" | xargs 2>/dev/null)
-#   bash=$(echo "$bash" | xargs 2>/dev/null)
-#   git=$(echo "$git" | xargs 2>/dev/null)
  
-
 #     sum=$((html + css +bash + git))
 #     avg=$(awk "BEGIN {prinf \"%.2f\", $sum/4}")
 #     echo "$avg,$name"
