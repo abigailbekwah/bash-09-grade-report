@@ -49,9 +49,9 @@ if (( html > 20 || css > 20 || bash > 20 || git > 20 )); then
     continue
 fi
 
-# calculate total and average
- sum=$((html + css + bash + git))
- avg=$(awk -v total="$sum" 'BEGIN {printf "%.2f", total/4}')
+# Calculate total score and average
+total=$((html + css + bash + git))
+avg=$(awk -v total="$total" 'BEGIN {printf "%.2f", total/4}')
 #  echo "$sum|$name|$html|$css|$bash|$git" >> "$tmp_data"
 # done < <(tail -n +2 "$CSV_FILE" | tr -d '\r')
  
@@ -61,6 +61,7 @@ fi
 
 # Calculate the total score first
 total=$(( html + css + bash + git ))
+avg=$(awk -v total="$total" 'BEGIN {printf "%.2f", total/4}')
 
 # Determine the mention
 if (( total >= 64 )); then 
