@@ -101,9 +101,11 @@ echo "$avg|$name|$html|$css|$bash|$git|$mention" >> "$tmp_data"
 # =====================================================================
 # skipped_lines=$(grep -c "skipped" "$tmp_data" 2>/dev/null || echo 0)
 
-# Aligned Blueprint Layout
-printf "%-6s %-15s %-6s %-6s %-6s %-6s %-8s %-15s\n" \
- "RANK" "NAME" "HTML" "CSS" "BASH" "GIT" "AVG" "MENTION"
+# Display report header
+printf "%-6s %-14s %6s %6s %6s %6s %8s %-14s\n" \
+    "RANK" "NAME" "HTML" "CSS" "BASH" "GIT" "AVERAGE" "MENTION"
+
+printf '%s\n' "--------------------------------------------------------------------------"
 
 rank=1
 class_sum=0
@@ -112,7 +114,7 @@ valid_student_count=0
 # Process valid records sorted from highest average downwards
 while IFS='|' read -r avg name html css bash git mention; do
 if [ -n "$avg" ]; then 
-    printf "  %-6d %-15s %-6s %-6s %-6s %-6s %-8s %-15s\n" \
+    printf "%-6d %-14s %6s %6s %6s %6s %8s %-14s\n" \
      "$rank" "$name" "$html" "$css" "$bash" "$git" "$avg" "$mention"
              
     class_sum=$(awk -v cs="$class_sum" -v a="$avg" 'BEGIN {print cs + a}')
@@ -120,6 +122,7 @@ if [ -n "$avg" ]; then
     ((valid_student_count++))
 fi
 done < <(sort -rn -t'|' -k1 "$tmp_data")
+printf '%s\n' "--------------------------------------------------------------------------"
 
 # Summary computations
 if [ "$valid_student_count" -gt 0 ]; then
@@ -128,6 +131,6 @@ else
     class_avg="0.00"
 fi
 
-echo "------------------------------------------------------------"
+# echo "------------------------------------------------------------"
 echo "Class average: $class_avg"
 echo "Skipped $skipped_lines invalid lines (see warnings above)."
