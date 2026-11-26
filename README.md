@@ -24,7 +24,7 @@ Executive Presentation
 
 ## screenshot
 
-![bash script] ![alt text](<asset/images/Screenshot From 2026-11-03 16-30-55.png>)
+![Bash scri] (<asset/images/Screenshot From 2026-11-26 13-49-48.png>)
 
 ## Features
 
@@ -34,7 +34,7 @@ Executive Presentation
 
 - Robust Error Handling
 
-- Automatic Rankingidual
+- Automatic Ranking
 
 - Aligned Formatting
 
@@ -60,7 +60,7 @@ Test the script with the following commands:
 ./grades.sh messy.csv
 ./grades.sh messy_crlf.csv
 
-## Challenges faces
+## Challanges face
 
 Heading linter errors
 Shell Syntax & Control Flow Clashes
@@ -68,11 +68,10 @@ Git Branching & Remote Synchronization
 
 ## 📚 what i learnt
 
-Technical documentation
 How to understand the question better
-Get to test my code on terminal
+Get to test my code on terminal if they are runnimg correctly  
 Robust Bash Scripting & Error Handling
-Correcting some few syntex errors
+Correcting some few syntax errors
 
 ## Author​
 
